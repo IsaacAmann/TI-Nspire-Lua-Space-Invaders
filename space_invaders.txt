@@ -1,0 +1,122 @@
+screen = platform.window;
+width = screen:width();
+height = screen:height();
+menuButtonsWidth = 100;
+menuButtonsHeight = 30;
+title = "Space Invaders";
+enemies = {};
+graphicsHandler = {
+    menu = true,
+    options = false,
+    game = false,
+}
+gameStarted = false;
+
+
+function on.timer()
+if graphicsHandler.game == true then
+    updatePositions();
+    screen:invalidate() ;
+    end
+end
+function on.paint(gc)
+--menu graphics stuff
+if graphicsHandler.menu == true then
+    gc:setColorRGB(153,153,230);
+    gc:fillRect(0,0,width,height) ;
+    --start button
+    gc:setColorRGB(55,5,5);
+    gc:fillRect(width/2-menuButtonsWidth/2,height/2.5,menuButtonsWidth,menuButtonsHeight);
+    gc:setColorRGB(33,55,66);
+    gc:drawString("Start",width/2-gc:getStringWidth("Start")/2,height/2.5,"top");
+ --begin main title
+    gc:setColorRGB(0,255,55);
+    gc:setFont("serif","b",32);
+    gc:drawString(title,width/2-gc:getStringWidth(title)/2,35,"middle");
+    
+elseif graphicsHandler.options == true then
+    print("options");
+--All of the graphics during the game should be fed into here
+elseif graphicsHandler.game == true then
+    
+    updateGraphics(gc)
+    spawnInterface(gc);
+   
+end
+    end
+    --clicky stuff, used in menu and options
+function on.mouseDown(x,y)
+    print(x);
+    print(y);
+    if (x >= width/2-menuButtonsWidth/2 and x <= width/2-menuButtonsWidth/2 + menuButtonsWidth)and 
+        (y >= height/2.5 and y <= height/2.5 + menuButtonsHeight) 
+    then
+    print("fired");
+    graphicsHandler.menu = false;
+    graphicsHandler.game = true;
+     end
+    end
+function spawnInterface(gc)
+--gc:fillRect(22,22,22,22);
+
+end
+function createEnemy(x,y,width,height,color)
+    local direction = true
+	local target = {	
+	}
+	target.x = x;
+	target.y = y;
+	target.width = width;
+	target.height = height;
+	
+	target.color = color;
+	
+	table.insert(enemies, 1, target);
+	target.draw = function(gc)
+	   gc:setColorRGB(44,4,60)
+		gc:fillRect(target.x,target.y,target.width,target.height)
+	end
+	target.backAndForth = function()
+	   if direction == true then
+	       target.x = target.x + 1
+	           if target.x+target.width >= screen:width() then
+	               direction = false
+	           end
+	       end
+	   if direction == false then
+	       target.x = target.x - 1
+	           if target.x <= 0 then
+	               direction = true
+	               end
+	       end
+	end
+	target.fire = function()
+	 
+	end
+	
+end
+function updateGraphics(gc)
+     for i,v in ipairs(enemies) do
+           v.draw(gc);
+       end
+
+    end
+function updatePositions() 
+    for i,v in ipairs(enemies) do
+        v.backAndForth()
+        v.fire()
+     end
+ end
+    
+function on.construction() 
+   timer.start(.01);
+end
+function createEnenemyGrid(rows, number)
+    for i=0,rows, 1 do
+        for g=0,number,1 do
+            
+end
+createEnemy(20,60,20,20,"red")
+    
+ 
+ 
